@@ -800,3 +800,35 @@ function PooledDataVecs(v1::AbstractArray,
     return (PooledDataArray(RefArray(refs1), pool),
             PooledDataArray(RefArray(refs2), pool))
 end
+
+function Base.convert{S, T, N}(::Type{PooledDataArray{S, N}}, x::Array{T, N})
+    return PooledDataArray(convert(Array{S}, x), falses(size(x)))
+end
+
+function Base.convert{T, N}(::Type{PooledDataArray}, x::Array{T, N})
+    return PooledDataArray(x, falses(size(x)))
+end
+
+function Base.convert{S, T, N}(::Type{PooledDataArray{S, N}}, x::DataArray{T, N})
+    return PooledDataArray(convert(Array{S}, x.data), x.na)
+end
+
+function Base.convert{T, N}(::Type{PooledDataArray}, x::DataArray{T, N})
+    return PooledDataArray(x.data, x.na)
+end
+
+function Base.convert{S, T, N}(::Type{PooledDataArray{S, N}}, x::PooledDataArray{T, N})
+    return PooledDataArray(convert(Array{S}, x.data), x.na)
+end
+
+function Base.convert{T, N}(::Type{PooledDataArray}, x::PooledDataArray{T, N})
+    return PooledDataArray(x.data, x.na)
+end
+
+function Base.convert{S, T, N}(::Type{DataArray{S, N}}, x::PooledDataArray{T, N})
+    return PooledDataArray(convert(Array{S}, x.data), x.na)
+end
+
+function Base.convert{T, N}(::Type{DataArray}, x::PooledDataArray{T, N})
+    return PooledDataArray(x.data, x.na)
+end
